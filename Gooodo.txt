@@ -1,0 +1,11 @@
+MVVMKO - Thankz guys
+
+1. http://weblogs.asp.net/shijuvarghese/archive/2011/08/21/building-javascript-mvvm-apps-in-asp-net-mvc-using-knockoutjs.aspx
+2. http://www.codeguru.com/csharp/implementing-mvvm-pattern-in-web-applications-using-knockout.html
+3. http://www.codeguru.com/csharp/.net/net_asp/mvc/introduction-to-single-page-applications-in-asp.net-mvc.htm - SPA 
+4. http://knockoutmvc.com/
+Validation
+5. http://www.codeproject.com/Articles/525532/Design-and-Develop-a-website-using-ASP-NET-MVC-4-E
+ 
+I. N. A. Zameer
+Be yourself beautiful, and you will find the world full of beauty.

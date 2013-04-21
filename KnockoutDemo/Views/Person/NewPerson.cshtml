@@ -1,0 +1,117 @@
+﻿@{
+    ViewBag.Title = "Samz New Person";
+}
+<script src="~/Scripts/knockout-2.1.0.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<script src="~/Scripts/knockout.validation.js"></script>
+
+@section scripts{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            ko.applyBindings(new PersonViewModel());
+        });
+
+        function Person(data) {
+            this.PersonID = ko.observable(data.PersonID);
+            this.LastName = ko.observable(data.LastName);
+            this.FirstName = ko.observable(data.FirstName);
+        }
+
+        function PersonViewModel() {
+            var self = this;
+
+            self.Persons = ko.observableArray([]);
+
+            self.PersonID = ko.observable();
+            self.LastName = ko.observable();
+            self.FirstName = ko.observable();
+
+            self.AddPerson = function () {
+                self.Persons.push(new Person({
+                    PersonID: self.PersonID(),
+                    LastName: self.LastName().extend({ required: true }),
+                    FirstName: self.FirstName()
+                }));
+                self.PersonID("");
+                self.LastName("");
+                self.FirstName("");
+            };
+
+            self.RemovePerson = function (Person) {
+                self.Persons.remove(Person);
+                $.post("/Person/RemovePerson", Person, function (result) {
+                    alert(result.d);
+                })
+            };
+
+            self.SaveToDb = function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Person/SavePeople",
+                    data: ko.toJSON({ data: self.Persons }),
+                    contentType: "application/json",
+                    success: function (result) {
+                        alert(result);
+                    }
+                });
+            };
+            $.getJSON("/Person/Loading", function (results) {
+                var Persons = $.map(results, function (item) {
+                    return new Person(item)
+                });
+                self.Persons(Persons);
+            })
+        }
+    </script>
+}
+<h2>NewPerson</h2>
+<table>
+    <tr>
+        <td>Person ID :</td>
+        <td>
+            <input data-bind="value: PersonID" /></td>
+    </tr>
+    <tr>
+        <td>Last Name :</td>
+        <td>
+            <input data-bind="value: LastName" /></td>
+    </tr>
+    <tr>
+        <td>First Name :</td>
+        <td>
+            <input data-bind="value: FirstName" /></td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <button type="button" data-bind="click:AddPerson">Add Person</button>
+            <button type="button" data-bind="click:SaveToDb">Save To Database</button>
+        </td>
+    </tr>
+
+</table>
+<table data-bind="visible: Persons().length > 0" border="0">
+    <tr>
+        <th>Person ID</th>
+        <th>Last Name</th>
+        <th>First Name</th>
+        <th>Action</th>
+    </tr>
+    <tbody data-bind="foreach: Persons">
+        <tr>
+            <td><span data-bind="text: PersonID" /></td>
+            <td>
+                <input data-bind="value: LastName" /></td>
+            <td>
+                <input data-bind="value: FirstName" /></td>
+
+            <td><a href="#" data-bind="click: $root.RemovePerson">Delete</a></td>
+        </tr>
+    </tbody>
+</table>
+<style>
+    .validationMessage {
+        color: red;
+        font-size: 0.8em;
+    }
+</style>
